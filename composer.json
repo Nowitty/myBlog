@@ -1,0 +1,17 @@
+{
+    "name": "ruslankuga/my-blog",
+    "description": "blog on clear php",
+    "authors": [
+        {
+            "name": "Ruslan Kuga",
+            "email": "rkkuga@gmail.com"
+        }
+    ],
+    "require": {
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    }
+}
