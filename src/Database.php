@@ -11,9 +11,12 @@ class Database
         $this->db = new \PDO("pgsql:dbname=myblog;host=localhost", "", "" );
         $this->db->setAttribute( \PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION );
     }
-    public function insert(array $article)
+    public function insertArticle(array $article)
     {
-        $sql = "INSERT INTO articles (name, body) VALUES ({$this->db->quote($article['name'])}, {$this->db->quote($article['body'])});";
+        $authorId = $this->selectUserIdByName($article['author'])[0]['id'];
+        var_dump($authorId);
+        $sql = "INSERT INTO articles (title, body, author_id) VALUES 
+        ({$this->db->quote($article['title'])}, {$this->db->quote($article['body'])}, {$authorId});";
         $this->db->exec($sql);
     }
     public function selectAll()
@@ -24,7 +27,7 @@ class Database
     {
         return $this->db->query("SELECT * FROM articles WHERE id={$id}")->fetchAll(\PDO::FETCH_ASSOC)[0];
     }
-    public function update($id, $article)
+    public function updateArticle($id, $article)
     {
         $sql = "UPDATE articles SET name = {$this->db->quote($article['name'])}, body = {$this->db->quote($article['body'])} WHERE id = {$id};";
         $this->db->exec($sql);
@@ -42,6 +45,11 @@ class Database
     public function selectByUserName($name)
     {
         $sql = "SELECT password FROM users WHERE name={$this->db->quote($name)}"; 
+        return $this->db->query($sql)->fetchAll(\PDO::FETCH_ASSOC);  
+    }
+    public function selectUserIdByName($name)
+    {
+        $sql = "SELECT id FROM users WHERE name={$this->db->quote($name)}"; 
         return $this->db->query($sql)->fetchAll(\PDO::FETCH_ASSOC);  
     }
     
