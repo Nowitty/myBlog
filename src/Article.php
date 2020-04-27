@@ -7,19 +7,27 @@ use App\Database;
 class Article
 {
     private $article = [];
-    public function __construct(array $article)
+    private $db;
+    public function __construct(array $article = [])
     {  
         $this->article = $article;
+        $this->db = new Database();
     }
     public function save()
     {
-        $db = new Database();
-        $db->insertArticle($this->article);
+        $this->db->insertArticle($this->article);
+    }
+    public function getArticleById($id)
+    {
+        return $this->db->selectArticleById($id);
+    }
+    public function update($id)
+    {
+        return $this->db->updateArticle($id, $this->article);
     }
     public function check()
     {
-        $db = new Database();
-        $user = $db->selectByUserName($this->name);
+        $user = $this->db->selectByUserName($this->name);
         if (empty($user)) {
             return false;
         }

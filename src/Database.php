@@ -14,7 +14,6 @@ class Database
     public function insertArticle(array $article)
     {
         $authorId = $this->selectUserIdByName($article['author'])[0]['id'];
-        var_dump($authorId);
         $sql = "INSERT INTO articles (title, body, author_id) VALUES 
         ({$this->db->quote($article['title'])}, {$this->db->quote($article['body'])}, {$authorId});";
         $this->db->exec($sql);
@@ -23,13 +22,13 @@ class Database
     {
         return $this->db->query("SELECT * FROM articles ORDER BY id DESC")->fetchAll(\PDO::FETCH_ASSOC);
     }
-    public function selectById($id)
+    public function selectArticleById($id)
     {
         return $this->db->query("SELECT * FROM articles WHERE id={$id}")->fetchAll(\PDO::FETCH_ASSOC)[0];
     }
     public function updateArticle($id, $article)
     {
-        $sql = "UPDATE articles SET name = {$this->db->quote($article['name'])}, body = {$this->db->quote($article['body'])} WHERE id = {$id};";
+        $sql = "UPDATE articles SET title = {$this->db->quote($article['title'])}, body = {$this->db->quote($article['body'])} WHERE id = {$id};";
         $this->db->exec($sql);
     }
     public function deleteArticle($id)
