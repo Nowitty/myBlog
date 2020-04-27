@@ -2,19 +2,20 @@
 
 require_once dirname(__DIR__) . '/vendor/autoload.php';
 
-use App\Database;
+use App\Article;
 
-$article = [
-    'name' => $_POST['name'],
+$articleParams = [
+    'title' => $_POST['title'],
     'body' => $_POST['body'],
+    'author' => $_POST['author']
 ];
 
-$db = new Database();
+$article = new Article($articleParams);
 
 if (isset($_POST['id'])) {
-    $db->update($_POST['id'], $article);
+    $article->update($_POST['id']);
 } else {
-    $db->insert($article);  
+    $article->save($article);  
 }
 
 header('Location: /');

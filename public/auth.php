@@ -1,3 +1,28 @@
+<?php
+
+require_once dirname(__DIR__) . '/vendor/autoload.php';
+
+use App\User;
+
+session_start();
+
+if (isset($_SESSION['auth'])) {
+    header('Location: /');
+    exit;
+}
+
+if (isset($_POST['name'])) {
+    $user = new User();
+    if ($user->check()) {
+        $user->auth();
+        header('Location: /');
+        exit;
+    } else {
+        echo "<div class='container'>Неверное имя пользователя или пароль</div>";
+    }
+}
+?>
+
 <style>
     <?php include dirname(__DIR__) . '/css/style.css'; ?>
 </style>
@@ -15,22 +40,3 @@
     <button type="submit" class="registerbtn">Register</button>
   </div>
 </form>
-
-<?php
-
-require_once dirname(__DIR__) . '/vendor/autoload.php';
-
-use App\User;
-
-if (isset($_POST['name'])) {
-    $user = new User($_POST['name'], $_POST['password']);
-    if ($user->check()) {
-        session_start();
-        $_SESSION['name'] = $user->getName();
-        header('Location: /');
-        exit;
-    } else {
-        echo "<div class='container'>Неверное имя пользователя или пароль</div>";
-    }
-}
-?>

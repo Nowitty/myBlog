@@ -21,14 +21,14 @@ if (isset($_GET['logout'])) {
 </style>
 
 <div class="top">
-    <?php if (!isset($_SESSION['name'])):?>
+    <?php if (!isset($_SESSION['auth'])):?>
     <a href="/auth.php">Вход</a>
     <a href="/new_user.php">Регистрация</a>
     <?php else: ?> 
     <a><?= $_SESSION['name']?></a>
+    <a href="/new_article.php"> Новая статья </a>
     <a href="/?logout">Выход</a>
     <?php endif?>
-    <a href="/new_article.php"> Новая статья </a>
 </div>
 <div class="one">
     <a href="/"><h1>myBlog</h1></a>
@@ -44,7 +44,7 @@ if (isset($_GET['logout'])) {
 }
 ?>
     <a href="/article.php/?id=<?=$article['id']?>">
-        <h1><?= $article['name'] ?></h1>
+        <h1><?= $article['title'] ?></h1>
     </a>
     <a href="/article.php/?id=<?=$article['id']?>">
         <p><?= $preview ?></p>
