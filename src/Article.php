@@ -6,36 +6,28 @@ use App\Database;
 
 class Article
 {
-    private $article = [];
     private $db;
-    public function __construct(array $article = [])
+    public function __construct()
     {  
-        $this->article = $article;
-        $this->db = new Database();
+        $this->db = new Database('articles');
     }
-    public function save()
+    public function getAll()
     {
-        $this->db->insertArticle($this->article);
+        $articles = $this->db->selectAll();
+        return $articles;
     }
-    public function getArticleById($id)
+    public function add($article)
     {
-        return $this->db->selectArticleById($id);
+        $this->db->insert($article);
+    }
+    public function getById($id)
+    {
+        
+        return $this->db->selectBy('id', $id)[0];
     }
     public function update($id)
     {
         return $this->db->updateArticle($id, $this->article);
-    }
-    public function check()
-    {
-        $user = $this->db->selectByUserName($this->name);
-        if (empty($user)) {
-            return false;
-        }
-        if ($this->password == $user[0]['password']) {
-            return true;
-        } else {
-            return false;
-        }
     }
 }
 

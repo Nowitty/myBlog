@@ -6,25 +6,29 @@ namespace App;
 class Database
 {
     private $db;
-    public function __construct()
+    private $table;
+    public function __construct($table)
     {
         $this->db = new \PDO("pgsql:dbname=myblog;host=localhost", "", "" );
         $this->db->setAttribute( \PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION );
+        $this->table = $table;
     }
-    public function insertArticle(array $article)
+    public function insert($params)
     {
-        $authorId = $this->selectUserIdByName($article['author'])[0]['id'];
-        $sql = "INSERT INTO articles (title, body, author_id) VALUES 
-        ({$this->db->quote($article['title'])}, {$this->db->quote($article['body'])}, {$authorId});";
-        $this->db->exec($sql);
+        $columns = array_keys($params);
+        $values = array_values($params);
+        var_dump($values);
+        // $sql = "INSERT INTO articles (title, body, author_id) VALUES 
+        // ({$this->db->quote($article['title'])}, {$this->db->quote($article['body'])}, {$authorId});";
+        // $this->db->exec($sql);
     }
     public function selectAll()
     {
-        return $this->db->query("SELECT * FROM articles ORDER BY id DESC")->fetchAll(\PDO::FETCH_ASSOC);
+        return $this->db->query("SELECT * FROM {$this->table} ORDER BY id DESC")->fetchAll(\PDO::FETCH_ASSOC);
     }
-    public function selectArticleById($id)
+    public function selectBy($column, $value)
     {
-        return $this->db->query("SELECT * FROM articles WHERE id={$id}")->fetchAll(\PDO::FETCH_ASSOC)[0];
+        return $this->db->query("SELECT * FROM {$this->table} WHERE {$column}='{$value}'")->fetchAll(\PDO::FETCH_ASSOC);
     }
     public function updateArticle($id, $article)
     {
@@ -35,21 +39,6 @@ class Database
     {
         $sql = "DELETE FROM articles WHERE id = {$this->db->quote($id)}";
         $this->db->exec($sql);
-    }
-    public function saveUser($name, $password)
-    {
-        $sql = "INSERT INTO users (name, password) VALUES ({$this->db->quote($name)}, {$this->db->quote($password)});";
-        $this->db->exec($sql);
-    }
-    public function selectByUserName($name)
-    {
-        $sql = "SELECT password FROM users WHERE name={$this->db->quote($name)}"; 
-        return $this->db->query($sql)->fetchAll(\PDO::FETCH_ASSOC);  
-    }
-    public function selectUserIdByName($name)
-    {
-        $sql = "SELECT id FROM users WHERE name={$this->db->quote($name)}"; 
-        return $this->db->query($sql)->fetchAll(\PDO::FETCH_ASSOC);  
     }
     
 }

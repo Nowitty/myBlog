@@ -6,42 +6,31 @@ use App\Database;
 
 class User
 {
-    public $name;
-    private $password;
     private $db;
     public function __construct()
     {
-        if (isset($_POST['name'])) {
-            $this->name = $_POST['name'];
-            $this->password = $_POST['password'];
-        } 
-        if (isset($_SESSION['name'])) {
-            $this->name = $_SESSION['name'];
-        }
-        $this->db = new Database();
+        $this->db = new Database('users');
     }
-    public function getUserId($name)
+    public function login($name, $psw)
     {
-        $user = $this->db->selectUserIdByName($name);
-        return $user[0]['id'];
-    }
-    public function auth()
-    {
-        $_SESSION['name'] = $this->name;
-        $_SESSION['auth'] = true;
-    }
-    public function check()
-    {
-        $db = new Database();
-        $user = $db->selectByUserName($this->name);
+        $user = $this->getByName($name);
         if (empty($user)) {
             return false;
         }
-        if ($this->password == $user[0]['password']) {
-            return true;
-        } else {
+        if ($user[0]['password'] !== $psw) {
             return false;
+        } else {
+            $_SESSION['user'] = [
+                'name' => $name,
+                'id' => $user[0]['id']
+            ];
+            return true;
         }
+    }
+    public function getByName($name)
+    {
+        $user = $this->db->selectBy('name', $name);
+        return $user;
     }
 }
 
