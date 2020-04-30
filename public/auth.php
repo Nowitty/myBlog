@@ -6,17 +6,14 @@ use App\User;
 
 session_start();
 
-if (isset($_SESSION['auth'])) {
+if (isset($_SESSION['user'])) {
     header('Location: /');
-    exit;
 }
 
 if (isset($_POST['name'])) {
     $user = new User();
-    if ($user->check()) {
-        $user->auth();
+    if ($user->login($_POST['name'], $_POST['password'])) {
         header('Location: /');
-        exit;
     } else {
         echo "<div class='container'>Неверное имя пользователя или пароль</div>";
     }

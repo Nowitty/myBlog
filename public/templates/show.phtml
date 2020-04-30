@@ -1,0 +1,36 @@
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Work+Sans:ital@1&display=swap');
+    <?php include dirname(__DIR__) . '/css/style.css'; ?>
+</style>
+<p><?= $title ?></p>
+<div class="top">
+    <?php if (!isset($_SESSION['user'])):?>
+    <a href="/auth.php">Вход</a>
+    <a href="/new_user.php">Регистрация</a>
+    <?php else: ?> 
+    <a><?= $_SESSION['user']['name']?></a>
+    <a href="/new_article.php"> Новая статья </a>
+    <a href="/?logout">Выход</a>
+    <?php endif?>
+</div>
+<div class="one">
+    <a href="/"><h1>myBlog</h1></a>
+</div>
+
+
+<?php foreach ($articles as $article): ?>
+<div class="article">
+<?php if (strlen($article['body']) > 300) {
+    $preview = substr($article['body'], 0, 300)."...";
+} else {
+    $preview = $article['body'];
+}
+?>
+    <a href="/article.php/?id=<?=$article['id']?>">
+        <h1><?= $article['title'] ?></h1>
+    </a>
+    <a href="/article.php/?id=<?=$article['id']?>">
+        <p><?= $preview ?></p>
+    </a>   
+</div>
+<?php endforeach ?>

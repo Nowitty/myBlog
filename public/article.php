@@ -9,17 +9,10 @@ use App\User;
 session_start();
 $article = new Article();
 $user = new User();
-if (isset($_GET['id'])) {
-    $id = $_GET['id'];    
-} else {
-    throw new \Exception('something went wrong');
+if (!isset($_GET['id'])) {
+    header('Location: /');
 }
-$articleParams = $article->getArticleById($id);
-if (isset($_SESSION['name'])) {
-    $userId = $user->getUserId($_SESSION['name']);
-} else {
-    $userId = null;
-}
+$articleParams = $article->getById($_GET['id']);
 
 ?>
 
@@ -28,11 +21,11 @@ if (isset($_SESSION['name'])) {
 </style>
 
 <div class="top">
-    <?php if (!isset($_SESSION['name'])):?>
+    <?php if (!isset($_SESSION['user'])):?>
     <a href="/auth.php">Вход</a>
     <a href="/new_user.php">Регистрация</a>
     <?php else: ?> 
-    <a><?= $_SESSION['name']?></a>
+    <a><?= $_SESSION['user']['name']?></a>
     <a href="/new_article.php"> Новая статья </a>
     <?php endif?>
 </div>
@@ -43,7 +36,7 @@ if (isset($_SESSION['name'])) {
 </div>
 
 <a href="/">Back</a>
-<?php if ($userId == $articleParams['author_id'] && isset($_SESSION['auth'])):?>
+<?php if ($_SESSION['user']['id'] == $articleParams['author_id'] && isset($_SESSION['user'])):?>
 <a href="/update.php/?id=<?=$articleParams['id']?>" method="get">
     <p>Редактировать статью</p>
 </a>
