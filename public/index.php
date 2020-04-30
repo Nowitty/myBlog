@@ -8,7 +8,7 @@ use App\App;
 $app = new App();
 
 $app->get('/', function() {
-    return app::render('show.phtml', ['title' => 'HOW HOW HOW']);
+    return App::render('show.phtml', ['title' => 'HOW HOW HOW']);
 });
 
 $app->run();

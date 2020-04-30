@@ -31,6 +31,7 @@ Class App
     }
     public static function render($template, $params = [])
     {
+        //wat
         extract($params);
         ob_start();
         include "templates/{$template}";
